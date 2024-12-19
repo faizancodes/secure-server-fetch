@@ -1,0 +1,40 @@
+{
+    "name": "secure-server-fetch",
+    "version": "1.0.0",
+    "description": "A secure, server-side HTTP client with built-in API key validation, rate limiting, and security features",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "test": "jest",
+        "lint": "eslint src/**/*.ts",
+        "prepare": "npm run build"
+    },
+    "keywords": [
+        "fetch",
+        "server",
+        "security",
+        "rate-limit",
+        "api-key",
+        "typescript"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "@upstash/redis": "^1.20.0",
+        "@upstash/ratelimit": "^0.4.0"
+    },
+    "devDependencies": {
+        "@types/node": "^18.0.0",
+        "typescript": "^4.9.0",
+        "jest": "^29.0.0",
+        "@types/jest": "^29.0.0",
+        "ts-jest": "^29.0.0",
+        "eslint": "^8.0.0",
+        "@typescript-eslint/parser": "^5.0.0",
+        "@typescript-eslint/eslint-plugin": "^5.0.0"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    }
+}
