@@ -1,6 +1,6 @@
 {
     "name": "secure-server-fetch",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "A secure, server-side HTTP client with built-in API key validation, rate limiting, and security features",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
