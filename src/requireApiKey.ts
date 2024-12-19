@@ -6,7 +6,7 @@ export function validateApiKey(key: string): boolean {
     // Ensure key is at least 32 characters long and contains a mix of characters
     const sanitizedKey = sanitizeApiKey(key);
     const hasMinLength = sanitizedKey.length >= 32;
-    const hasValidChars = /^[A-Za-z0-9_\-]+$/.test(sanitizedKey);
+    const hasValidChars = /^[A-Za-z0-9_-]+$/.test(sanitizedKey);
     const hasMixedChars = /[A-Z]/.test(sanitizedKey) && 
                          /[a-z]/.test(sanitizedKey) && 
                          /[0-9]/.test(sanitizedKey);

@@ -46,7 +46,7 @@ export async function secureServerFetch<T>(
     if (options.requireHttps !== false && parsedUrl.protocol !== 'https:') {
       throw new ValidationError('HTTPS is required. Use requireHttps: false to override.');
     }
-  } catch (e) {
+  } catch {
     throw new ValidationError(`Invalid URL provided: ${url}`);
   }
 
@@ -55,7 +55,7 @@ export async function secureServerFetch<T>(
     throw new ServerSideError('secureServerFetch can only run on the server.');
   }
 
-  const { apiKey, requireHttps, timeout = 30000, ...fetchOptions } = options;
+  const { apiKey, timeout = 30000, ...fetchOptions } = options;
   const headers = new Headers(fetchOptions.headers || {});
   if (apiKey) {
     headers.set('x-api-key', apiKey);
@@ -92,7 +92,7 @@ export async function secureServerFetch<T>(
 
     try {
       return await response.json() as T;
-    } catch (error) {
+    } catch {
       throw new NetworkError(
         'Failed to parse JSON response',
         response.status,
