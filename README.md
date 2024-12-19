@@ -66,6 +66,73 @@ export async function handler(request: Request) {
 }
 ```
 
+#### API Key Requirements
+
+The API key validation enforces the following requirements:
+
+- **Length**: Must be at least 32 characters long
+- **Character Set**: Can only contain:
+  - Uppercase letters (A-Z)
+  - Lowercase letters (a-z)
+  - Numbers (0-9)
+  - Underscores (_)
+  - Hyphens (-)
+- **Character Mix**: Must contain at least:
+  - One uppercase letter
+  - One lowercase letter
+  - One number
+
+#### Error Responses
+
+All error responses are returned in JSON format with appropriate HTTP status codes:
+
+1. **Missing API Key** (Status: 401)
+```json
+{
+  "error": "API key is missing",
+  "message": "Please provide 'x-api-key' header with a valid API key",
+  "requirements": {
+    "format": "Must be at least 32 characters long",
+    "characters": "Can only contain letters, numbers, underscores, and hyphens",
+    "complexity": "Must contain at least one uppercase letter, one lowercase letter, and one number"
+  }
+}
+```
+
+2. **Empty API Key** (Status: 401)
+```json
+{
+  "error": "Empty API key",
+  "message": "API key cannot be empty",
+  "requirements": {
+    "format": "Must be at least 32 characters long",
+    "characters": "Can only contain letters, numbers, underscores, and hyphens",
+    "complexity": "Must contain at least one uppercase letter, one lowercase letter, and one number"
+  }
+}
+```
+
+3. **Invalid Format** (Status: 401)
+```json
+{
+  "error": "Invalid API key format",
+  "message": "[Specific validation error message]",
+  "requirements": {
+    "format": "Must be at least 32 characters long",
+    "characters": "Can only contain letters, numbers, underscores, and hyphens",
+    "complexity": "Must contain at least one uppercase letter, one lowercase letter, and one number"
+  }
+}
+```
+
+4. **Invalid API Key** (Status: 401)
+```json
+{
+  "error": "Invalid API key",
+  "message": "The provided API key is not valid"
+}
+```
+
 ### Rate Limiting
 
 ```typescript
