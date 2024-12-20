@@ -1,12 +1,23 @@
 import { Redis } from '@upstash/redis';
 
+/**
+ * Custom error class for Redis connection issues
+ * @class RedisConnectionError
+ * @extends Error
+ */
 class RedisConnectionError extends Error {
-  constructor(message: string) {
+  constructor(message: string, public details?: string) {
     super(message);
     this.name = 'RedisConnectionError';
   }
 }
 
+const isProd = !['development', 'test', 'preview'].includes(process.env.NODE_ENV ?? '');
+
+/**
+ * Validates required Redis environment variables and their format
+ * @throws {RedisConnectionError} When environment variables are missing or invalid
+ */
 function validateEnvironmentVariables() {
   const errors: string[] = [];
 
@@ -37,20 +48,34 @@ function validateEnvironmentVariables() {
   }
 
   if (errors.length > 0) {
-    const isProd = process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test';
-    const errorMessage = isProd 
-      ? 'Redis configuration error occurred' 
+    const publicMessage = isProd 
+      ? 'Invalid Redis configuration' 
       : `Redis configuration error: ${errors.join(', ')}`;
-    throw new RedisConnectionError(errorMessage);
+    
+    throw new RedisConnectionError(
+      publicMessage,
+      isProd ? errors.join(', ') : undefined
+    );
   }
 }
 
+/**
+ * Tests the Redis connection by attempting to ping the server
+ * @param client - The Redis client instance to test
+ * @throws {RedisConnectionError} When the connection test fails
+ * @returns {Promise<void>}
+ */
 async function testConnection(client: Redis): Promise<void> {
   try {
     await client.ping();
   } catch (error) {
+    const publicMessage = isProd 
+      ? 'Failed to connect to Redis' 
+      : `Failed to connect to Redis: ${error instanceof Error ? error.message : 'Unknown error'}`;
+    
     throw new RedisConnectionError(
-      `Failed to connect to Redis: ${error instanceof Error ? error.message : 'Unknown error'}`
+      publicMessage,
+      isProd ? `${error instanceof Error ? error.message : 'Unknown error'}` : undefined
     );
   }
 }
@@ -63,7 +88,14 @@ export const redis = new Redis({
 });
 
 // Test the connection immediately
-testConnection(redis).catch((error) => {
-  console.error('Redis connection test failed:', error);
+testConnection(redis).catch((error) => {  
+  // Log the detailed error for debugging
+  if (error instanceof RedisConnectionError && error.details) {
+    console.error('Redis connection error details:', error.details);
+  }
+  
+  // Log only the safe public message
+  console.error('Redis connection test failed:', error.message);
+  
   process.exit(1);
 });
