@@ -12,20 +12,32 @@ describe('API Key Validation', () => {
 
   describe('validateApiKey', () => {
     it('should validate correct API keys', () => {
-      expect(validateApiKey(validApiKey)).toBe(true);
+      expect(validateApiKey(validApiKey)).toEqual({ isValid: true });
     });
 
     it('should reject short API keys', () => {
-      expect(validateApiKey('Test123')).toBe(false);
+      expect(validateApiKey('Test123')).toEqual({
+        isValid: false,
+        error: "API key must be at least 32 characters long"
+      });
     });
 
     it('should reject keys without mixed case', () => {
-      expect(validateApiKey('test123456789abcdef123456789abcdef')).toBe(false);
-      expect(validateApiKey('TEST123456789ABCDEF123456789ABCDEF')).toBe(false);
+      expect(validateApiKey('test123456789abcdef123456789abcdef')).toEqual({
+        isValid: false,
+        error: "API key must contain at least one uppercase letter, one lowercase letter, and one number"
+      });
+      expect(validateApiKey('TEST123456789ABCDEF123456789ABCDEF')).toEqual({
+        isValid: false,
+        error: "API key must contain at least one uppercase letter, one lowercase letter, and one number"
+      });
     });
 
     it('should reject keys without numbers', () => {
-      expect(validateApiKey('TestABCDEFGHIJKLMNOPQRSTUVWXYZabcd')).toBe(false);
+      expect(validateApiKey('TestABCDEFGHIJKLMNOPQRSTUVWXYZabcd')).toEqual({
+        isValid: false,
+        error: "API key must contain at least one uppercase letter, one lowercase letter, and one number"
+      });
     });
   });
 
