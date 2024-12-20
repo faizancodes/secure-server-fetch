@@ -41,7 +41,7 @@ export class RateLimitError extends Error {
 function sanitizeIdentifier(identifier: string): string {
   // Remove any Redis special characters and command patterns
   const sanitized = identifier
-    .replace(/[\@\{\}\(\)\[\]\/\\\"\'\`\~\,\.\;\:\<\>\*\&\^\%\$\#\@\!\?\=\+\|]/g, '_')
+    .replace(/[@{}()[\]/\\"'`~,.;:<>*&^%$#@!?=+|]/g, '_')
     // Prevent command injection patterns by removing spaces and newlines
     .replace(/[\s\n\r]+/g, '_')
     // Limit the length to prevent extremely long keys
